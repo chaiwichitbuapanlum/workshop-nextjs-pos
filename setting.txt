@@ -1,0 +1,10 @@
+1
+    npx create-next-app@latest
+
+2 
+    npx shadcn@latest init
+
+    npx shadcn@latest add button
+    npx shadcn@latest add label
+    npx shadcn@latest add input
+    npx shadcn@latest add card
