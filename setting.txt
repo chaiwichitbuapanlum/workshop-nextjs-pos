@@ -8,3 +8,28 @@
     npx shadcn@latest add label
     npx shadcn@latest add input
     npx shadcn@latest add card
+
+
+
+3 prisam
+    npm install --save-dev prisma
+    npm i @prisma/client
+    npm i prisam init
+
+
+
+
+    npx prisma migrate dev --name "add_user_model"
+
+
+4
+npm i zod
+
+    สร้าง schema => นำไปใช้
+
+5 
+npm i bcrypt
+npm i --save-dev @types/bcrypt
+
+6 
+    npm i jose
