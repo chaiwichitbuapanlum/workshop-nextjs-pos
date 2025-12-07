@@ -5,36 +5,58 @@ import SubmitBtn from '@/components/shared/submit-btn'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import Form from 'next/form'
 import AuthFooter from './auth-footer'
+import { useForm } from '@/hooks/use-form'
+import { authAction } from '../actions/auth'
+import ErrorMessage from '@/components/shared/error-message'
 
 interface AuthFormProps {
-    type: 'signup' | 'signin'
+  type: 'signup' | 'signin'
 }
+
 const AuthForm = ({ type }: AuthFormProps) => {
+  const renderInput = (
+    label: string,
+    id: string,
+    type = 'text',
+    required = false
+  ) => (
+    <div className='flex flex-col gap-2'>
+      <InputForm
+        label={label}
+        id={id}
+        type={type}
+        required={required}
+      />
+      {errors[id] && <ErrorMessage error={errors[id][0]} />}
+    </div>
+  )
 
-    const rederInput = (label: string, id: string, type = 'text', required = false) => (
-        <div>
-            <InputForm label={label} id={id} type={type} required={required} />
-        </div>
-    )
+  const { errors, formAction, isPending, clearErrors } = useForm(
+    authAction,
+    type === 'signup' ? '/auth/signin' : '/'
+  )
 
-    return (
-        <Form action=''>
-            <CardContent className='grid gap-3'>
-                { type === 'signup' && rederInput('ชื่อผู้ใช้', 'name', 'text', true) }
-                { rederInput('อีเมล', 'email', 'email', true) }
-                { rederInput('รหัสผ่าน', 'password', 'password', true) }
-                { type === 'signup' && rederInput('ยืนยันรหัสผ่าน', 'confirmPassword', 'password', true) }
-            </CardContent>
-            <CardFooter className='pt-4 flex flex-col gap-2'>
-                <AuthFooter type={type} />
-               <SubmitBtn 
-                name={type === 'signup' ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ'} 
-                pending={false}
-                className='w-full' 
-                />
-            </CardFooter>
-        </Form>
-    )
+  return (
+    <Form
+      action={formAction}
+      onChange={clearErrors}
+    >
+      <CardContent className='flex flex-col gap-3'>
+        {type === 'signup' && renderInput('ชื่อผู้ใช้', 'name')}
+        {renderInput('อีเมล', 'email', 'email', true)}
+        {renderInput('รหัสผ่าน', 'password', 'password', true)}
+        {type === 'signup' &&
+          renderInput('ยืนยันรหัสผ่าน', 'confirmPassword', 'password', true)}
+      </CardContent>
+      <CardFooter className='pt-4 flex flex-col gap-2'>
+        <AuthFooter type={type} />
+        <SubmitBtn
+          name={type === 'signup' ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ'}
+          className='w-full'
+          pending={isPending}
+        />
+      </CardFooter>
+    </Form>
+  )
 }
-
 export default AuthForm

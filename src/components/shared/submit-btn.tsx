@@ -1,22 +1,36 @@
 import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
+import { Loader2, LucideIcon } from 'lucide-react'
 
 interface SubmitBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    name: string
-    pending?: boolean
-
+  name: string
+  pending?: boolean
+  icon?: LucideIcon
 }
 
-const SubmitBtn = ({ name, pending = false, ...props }: SubmitBtnProps) => {
+const SubmitBtn = ({
+  name,
+  pending = false,
+  icon,
+  ...props
+}: SubmitBtnProps) => {
+  const Icon = icon
   return (
-    <Button 
-        type="submit" 
-        disabled={pending}
-        {...props} 
-        >
-      {pending ? <Loader2 size={16} className="mr-2 h-4 w-4 animate-spin" /> : name}
+    <Button
+      type='submit'
+      disabled={pending}
+      {...props}
+    >
+      {pending ? (
+        <Loader2
+          size={16}
+          className='animate-spin'
+        />
+      ) : (
+        <>
+          {Icon && <Icon size={16} />} {name}
+        </>
+      )}
     </Button>
   )
 }
-
 export default SubmitBtn

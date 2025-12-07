@@ -1,10 +1,15 @@
 export interface InitialFormState {
     success: boolean;
     message: string;
-    error?: Record<string, string[]>;
+    errors?: Record<string, string[]>;
 }
 
 export const initialFormState: InitialFormState = {
     success: false,
     message: "",
 }
+
+export type ActionType = (
+    _prevState: InitialFormState, 
+    formData: FormData
+) => Promise<InitialFormState>;

@@ -37,10 +37,10 @@ export const signup = async (input: SignupInput) => {
 
         if (!success) {
 
-            return {
-                message: 'กรุณากรอกข้อมูลให้ถูกต้อง',
-                errors: error.flatten().fieldErrors,
-            }
+        return {
+            success: false,
+            errors: error.flatten().fieldErrors,
+        }
         }
 
         const user = await db.user.findUnique({
@@ -51,6 +51,7 @@ export const signup = async (input: SignupInput) => {
 
         if (user) {
             return {
+                success: false,
                 message: 'อีเมลนี้ถูกใช้งานแล้ว',
             }
         }
@@ -70,12 +71,14 @@ export const signup = async (input: SignupInput) => {
         await setCookieToken(token)
 
         return {
+            success: true,
             message: 'สมัครสมาชิกสำเร็จ'
         }
 
     } catch (error) {
         console.error('Signup error:', error);
         return {
+            success: false,
             message: 'เกิดข้อผิดพลาดในการสมัครสมาชิก',
         }
     }
