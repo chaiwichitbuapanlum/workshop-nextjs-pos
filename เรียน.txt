@@ -1,3 +1,10 @@
 Day11_Workshop_1
 Day12_Workshop_2
-    1.38.48
+Day13_Workshop_3
+
+
+
+
+การเชื่อมต่อ db
+    สร้าง fucntion ใน db
+        กำหนด schema

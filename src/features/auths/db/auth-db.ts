@@ -1,14 +1,20 @@
-import { signupSchema } from '@/features/auths/schemas/auth-schema';
+import { signupSchema, signinSchema } from '@/features/auths/schemas/auth-schema';
+import { getUserById } from '@/features/users/db/user-db';
 import { db } from '@/lib/db';
-import { hash, genSalt } from 'bcrypt';
+import { hash, genSalt, compare } from 'bcrypt';
 import { SignJWT } from 'jose';
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 interface SignupInput {
     name: string;
     email: string;
     password: string;
     confirmPassword: string;
+}
+
+interface SigninInput {
+    email: string;
+    password: string;
 }
 
 const generateJwtToken = async (userId: string) => {
@@ -83,3 +89,68 @@ export const signup = async (input: SignupInput) => {
         }
     }
 }
+
+export const signin = async (input: SigninInput) => {
+    try {
+        const { success, data, error } = signinSchema.safeParse(input);
+
+        if (!success) {
+            return {
+                success: false,
+                message: 'ข้อมูลไม่ถูกต้อง',
+                errors: error.flatten().fieldErrors,
+            }
+        }
+
+        
+
+        const user = await db.user.findUnique({
+            where: {
+                email: data.email
+            }
+        })  
+
+        if (!user) {
+            return {
+                success: false,
+                message: 'ไม่พบผู้ใช้งานนี้ในระบบ',
+            }
+        }
+
+        if (user.status !== 'Active') {
+            return {
+                success: false,
+                message: 'บัญชีผู้ใช้งานนี้ถูกระงับการใช้งาน',
+            }
+        }
+
+        const isPasswordValid = await compare(data.password, user.password)
+        if (!isPasswordValid) {
+            return {
+                success: false,
+                message: 'รหัสผ่านไม่ถูกต้อง',
+            }
+        }
+
+        const token = await generateJwtToken(user.id)
+        await setCookieToken(token)
+
+        return {
+            success: true,
+            message: 'เข้าสู่ระบบสำเร็จ'
+        }
+
+        
+    } catch (error) {
+        console.error('Signin error:', error);
+        return {
+            success: false,
+            message: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
+        }
+    }
+}
+
+export const authCheck = async () => {
+  const userId = (await headers()).get("x-user-id");
+  return userId ? await getUserById(userId) : null;
+};

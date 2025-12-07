@@ -14,12 +14,17 @@ export const useForm = (action: ActionType, route?: string) => {
   useEffect(() => {
     if (!state) return;
 
+    // console.log('useForm state:', state); // Debug log
+
     if (state.errors) setErrors(state.errors);
 
     if (state.message) {
       if (state.success) {
         toast.success(state.message);
-        if (route) router.push(route);
+        if (route) {
+          console.log('Redirecting to:', route); // Debug log
+          router.push(route);
+        }
       } else {
         toast.error(state.message);
       }
