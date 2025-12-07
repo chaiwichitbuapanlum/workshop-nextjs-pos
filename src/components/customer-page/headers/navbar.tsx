@@ -1,6 +1,10 @@
 import { UserType } from '@/types/user-type'
 import MobileMenu from './mobile-menu'
 import CardIcon from './card-icon'
+import { DesktopNavLinks } from './navlinks'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import DesktopUserMenu from './desktop-user-menu'
 
 
 interface NavbarProps {
@@ -17,11 +21,23 @@ const NavbarCustomer = ({ user }: NavbarProps) => {
         <MobileMenu user={user} />
 
         {/* Desktop Navigation */}
-        <div className='hidden'>
-            <div>Desktop Links</div>
+        <div className='hidden md:flex md:items-center'>
+            <DesktopNavLinks />
             {user 
-            ? <div>Profile</div>
-            : <div>เข้าสู่ระบบ</div>}
+            ? <DesktopUserMenu user={user} />
+            : (
+              <Button
+                asChild  
+                size="sm" 
+                className=""
+                
+              >
+                <Link href="/auth/signin" className="text-lg font-medium">
+                    เข้าสู่ระบบ
+                </Link>
+              </Button>
+            )
+            }
         </div>
     </nav>
   )

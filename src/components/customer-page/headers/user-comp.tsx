@@ -11,6 +11,7 @@ import {
     CardContent
 } from '@/components/ui/card'
 import Image from "next/image"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface UserCompProps {
     user: UserType
@@ -32,19 +33,49 @@ export const AuthButtons = () => (
     </div>
 )
 
-export const SignoutButton = () => {
-    const { handleSignout, isPending } = useSignout()
-    return (
-        <SheetClose asChild>
-            <Button 
+export const SignoutButton = ({ isMobile = false, isSheet = false }) => {
+    const { isPending, handleSignout } = useSignout()
+
+    // ใช้สำหรับ mobile menu ที่อยู่ใน Sheet
+    if (isMobile && isSheet) {
+        return (
+            <SheetClose asChild>
+                <Button
+                    variant='destructive'
+                    size='lg'
+                    disabled={isPending}
+                    onClick={handleSignout}
+                >
+                    ออกจากระบบ
+                </Button>
+            </SheetClose>
+        )
+    }
+
+    // ใช้สำหรับ dropdown menu หรือ desktop
+    if (isMobile) {
+        return (
+            <Button
                 variant='destructive'
                 size='lg'
-                onClick={handleSignout}
+                className="w-full"
                 disabled={isPending}
+                onClick={handleSignout}
             >
-                {isPending ? <Loader2 size='20' className="animate-spin" /> : 'ออกจากระบบ'}
+                ออกจากระบบ
             </Button>
-        </SheetClose>
+        )
+    }
+
+    return (
+        <Button
+            variant='destructive'
+            className='w-full mt-4'
+            disabled={isPending}
+            onClick={handleSignout}
+        >
+            ออกจากระบบ
+        </Button>
     )
 }
 
@@ -54,13 +85,13 @@ export const UserAvatar = ({ user }: UserCompProps) => (
         <Card className="border-primary/50">
             <CardContent className="flex flex-col items-center gap-4">
                 {/* Picture */}
-                <Image 
-                    src={user.picture || '/images/no-user-image.webp'} 
-                    alt={`${user.name}'s avatar` || 'Profile'} 
+                <Image
+                    src={user.picture || '/images/no-user-image.webp'}
+                    alt={`${user.name}'s avatar` || 'Profile'}
                     width={120}
-                    height={120} 
+                    height={120}
                     priority
-                    className="rounded-full border-2 border-primary shadow-lg object-cover"/>
+                    className="rounded-full border-2 border-primary shadow-lg object-cover" />
                 {/* Name || Email */}
                 <h2 className="text-xl font-semibold">
                     {user.name || user.email}
@@ -68,4 +99,32 @@ export const UserAvatar = ({ user }: UserCompProps) => (
             </CardContent>
         </Card>
     </div>
+)
+
+export const UserAvatarSmall = ({ user }: UserCompProps) => (
+  <Avatar className='border-primary shadow-lg'>
+    <AvatarImage
+      src={user.picture || undefined}
+      alt={user.name || 'User'}
+    />
+    <AvatarFallback className='bg-primary text-primary-foreground'>
+      {user.name
+        ? user.name.slice(0, 2).toUpperCase()
+        : user.email.slice(0, 2).toUpperCase()}
+    </AvatarFallback>
+  </Avatar>
+)
+
+export const UserDropdownAvatar = ({ user }: UserCompProps) => (
+  <Avatar className='size-16 border-2 border-primary'>
+    <AvatarImage
+      src={user.picture || undefined}
+      alt={user.name || 'User'}
+    />
+    <AvatarFallback className='text-lg'>
+      {user.name
+        ? user.name.slice(0, 2).toUpperCase()
+        : user.email.slice(0, 2).toUpperCase()}
+    </AvatarFallback>
+  </Avatar>
 )
