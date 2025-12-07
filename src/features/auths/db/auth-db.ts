@@ -1,4 +1,5 @@
 import { signupSchema, signinSchema } from '@/features/auths/schemas/auth-schema';
+import { revalidateUserCache } from '@/features/users/db/cache';
 import { getUserById } from '@/features/users/db/user-db';
 import { db } from '@/lib/db';
 import { hash, genSalt, compare } from 'bcrypt';
@@ -75,6 +76,8 @@ export const signup = async (input: SignupInput) => {
 
         const token = await generateJwtToken(newUser.id)
         await setCookieToken(token)
+
+        revalidateUserCache(newUser.id) // ล้าง cache ของ user คนนี้ หลังจากสร้างใหม่
 
         return {
             success: true,

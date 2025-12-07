@@ -1,5 +1,6 @@
 import { authCheck } from "@/features/auths/db/auth-db"
 import { redirect } from "next/navigation"
+import HeaderCustomer from '@/components/customer-page/headers/header'
 
 interface AuthLayoutProps {
   children: React.ReactNode
@@ -15,8 +16,11 @@ const AuthLayout = async ({ children }: AuthLayoutProps) => {
   }
   return (
     <div className="flex flex-col justify-center min-h-svh">
-      {children}
-    </div>
+      <HeaderCustomer user={null}/>
+      <div>
+        {children}
+      </div>
+    </div >
   )
 }
 
