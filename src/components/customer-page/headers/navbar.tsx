@@ -14,7 +14,7 @@ const NavbarCustomer = ({ user }: NavbarProps) => {
     >
         {/* Mobile Navigation */}
         {user && <CardIcon />}
-        <MobileMenu />
+        <MobileMenu user={user} />
 
         {/* Desktop Navigation */}
         <div className='hidden'>

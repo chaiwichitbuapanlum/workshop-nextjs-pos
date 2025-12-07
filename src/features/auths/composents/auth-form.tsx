@@ -6,7 +6,7 @@ import { CardContent, CardFooter } from '@/components/ui/card'
 import Form from 'next/form'
 import AuthFooter from './auth-footer'
 import { useForm } from '@/hooks/use-form'
-import { authAction } from '../actions/auth'
+import { authAction } from '../actions/auths'
 import ErrorMessage from '@/components/shared/error-message'
 
 interface AuthFormProps {
