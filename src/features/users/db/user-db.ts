@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
 import { cacheLife, cacheTag } from 'next/cache'
 import { getUserIdTag } from './cache'
+import { UserType } from '@/types/user-type'
 
 /**
  * ดึงข้อมูลผู้ใช้จากฐานข้อมูลตาม ID ที่ระบุ
@@ -48,7 +49,7 @@ export const getUserById = async (id: string): Promise<object | null> => {
             }
         })
 
-        return user
+        return user as UserType
         
     } catch (error) {
         // บันทึก error ลงใน console เพื่อการ debug
