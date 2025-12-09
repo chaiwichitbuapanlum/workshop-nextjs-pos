@@ -1,10 +1,9 @@
-import { useState, useEffect, useActionState, useCallback } from "react";
+import { useEffect, useActionState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { ActionType, initialFormState } from "@/types/action-type";
 import { toast } from "sonner";
 
 export const useForm = (action: ActionType, route?: string) => {
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [state, formAction, isPending] = useActionState(
     action,
     initialFormState,
@@ -13,10 +12,6 @@ export const useForm = (action: ActionType, route?: string) => {
 
   useEffect(() => {
     if (!state) return;
-
-    // console.log('useForm state:', state); // Debug log
-
-    if (state.errors) setErrors(state.errors);
 
     if (state.message) {
       if (state.success) {
@@ -31,7 +26,10 @@ export const useForm = (action: ActionType, route?: string) => {
     }
   }, [state, route, router]);
 
-  const clearErrors = useCallback(() => setErrors({}), []);
+  // แสดง error จาก server ถ้ามี
+  const errors = useMemo(() => state?.errors ?? {}, [state?.errors]);
+  // placeholder สำหรับ compatibility เผื่อถูกใช้งานใน component อื่น
+  const clearErrors = useCallback(() => {}, []);
 
   return {
     state,

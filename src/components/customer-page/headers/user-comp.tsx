@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { SheetClose } from "@/components/ui/sheet"
 import { useSignout } from '@/hooks/use-sign-out'
-import { Loader2 } from "lucide-react"
 import { UserType } from "@/types/user-type"
 import {
     Card,

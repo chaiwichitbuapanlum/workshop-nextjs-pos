@@ -1,4 +1,8 @@
 import { User } from "@prisma/client";
 
-//Omit  ตัดฟิลด์ที่ไม่ต้องการออกจาก User type
-export interface UserType extends Omit<User, 'password' | 'createdAt' | 'updatedAt' | 'pictureId'> {}
+//Omit password และ field วันที่ที่ไม่ต้องการส่งต่อไปที่ client
+export type UserType = Omit<
+  User,
+  "password" | "createdAt" | "updatedAt" | "pictureId"
+>;
+

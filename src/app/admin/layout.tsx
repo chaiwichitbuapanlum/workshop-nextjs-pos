@@ -1,5 +1,6 @@
 
 //server component
+import HerderAdmin from '@/components/admin-page/herder/herder'
 import SidebarAdmin from '@/components/admin-page/sidebar/sidebar'
 import { authCheck } from '@/features/auths/db/auth-db'
 import { SidebarProvider } from '@/providers/SidebarProvider'
@@ -24,7 +25,7 @@ const AdminLayout = async ({ children }: LayoutProps) => {
                 <SidebarAdmin user={user} />
 
                 <div className="flex-1 flex flex-col overflow-hidden">
-                    {/* <div>Navbar</div> */}
+                    <HerderAdmin user={user} />
                     <main className="flex-1 overflow-y-auto md:ml-64 pt-16 p-4 md:px-6 transition-all duration-200">{children}</main>
                 </div>
 
