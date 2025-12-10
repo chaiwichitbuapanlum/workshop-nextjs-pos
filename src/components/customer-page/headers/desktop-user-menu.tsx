@@ -70,7 +70,7 @@ const DesktopUserMenu = ({ user }: DesktopUserMenuProps) => {
                             asChild
                             className="mt-2 cursor-pointer hover:bg-gray-400"
                         >
-                            <Link href="/admin-dashboard" className="w-full  hover:bg-gray-400">
+                            <Link href="/admin" className="w-full  hover:bg-gray-400">
                                 แดชบอร์ดผู้ดูแลระบบ
                             </Link>
                         </DropdownMenuItem>

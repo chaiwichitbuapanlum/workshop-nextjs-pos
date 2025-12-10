@@ -74,7 +74,7 @@ const SidebarAdmin = ({ user }: SidebarAdminProps) => {
                 {/* Header */}
                 <div className="flex h-16 items-center justify-between px-4 border-b border-border">
                     {/* Logo */}
-                    <Link href="/admin" className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2">
                         <div className="rounded-md bg-primary p-1">
                             <div className="size-6 text-primary-foreground font-bold flex items-center justify-center">
                                 A
