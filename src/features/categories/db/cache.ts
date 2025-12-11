@@ -11,8 +11,8 @@ export const getCategoryIdTag = (id: string) => {
 }
 
 export const revalidateCategoryCache = async (id?: string) => {
-    revalidateTag( getCategoryGlobalTag(), {} );
+    revalidateTag(getCategoryGlobalTag());
     if (id) {
-        revalidateTag( getCategoryIdTag( id ), {} );
+        revalidateTag(getCategoryIdTag(id));
     }
 }

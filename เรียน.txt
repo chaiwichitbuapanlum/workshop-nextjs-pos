@@ -23,6 +23,8 @@ Day18_Workshop_8
 
 Day19_Workshop_9
 
+Day20_Workshop_10
+
 
 การเชื่อมต่อ db
     สร้าง fucntion ใน db
