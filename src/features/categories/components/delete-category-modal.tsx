@@ -19,6 +19,7 @@ const DeleteCategoryModal = ({
   onOpenChange,
   category,
 }: DeleteCategoryModalProps) => {
+  
   const { state, formAction, isPending } = useForm(deleteCategoryAction);
 
   useEffect(() => {

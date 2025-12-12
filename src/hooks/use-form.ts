@@ -3,11 +3,14 @@ import { useRouter } from "next/navigation";
 import { ActionType, initialFormState } from "@/types/action-type";
 import { toast } from "sonner";
 
+
 export const useForm = (action: ActionType, route?: string) => {
   const [state, formAction, isPending] = useActionState(
     action,
     initialFormState,
   );
+
+  // const [errors, setErrors] = useState<Record<string, string[]>>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export const useForm = (action: ActionType, route?: string) => {
   // แสดง error จาก server ถ้ามี
   const errors = useMemo(() => state?.errors ?? {}, [state?.errors]);
   // placeholder สำหรับ compatibility เผื่อถูกใช้งานใน component อื่น
-  const clearErrors = useCallback(() => {}, []);
+  const clearErrors = useCallback(() => ({}), []);
 
   return {
     state,

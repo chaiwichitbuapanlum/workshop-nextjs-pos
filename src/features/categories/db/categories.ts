@@ -173,3 +173,61 @@ export const updateCategory = async (input: UpdateCategoryInput) => {
     };
   }
 };
+
+
+export const changeCategoryStatus = async (id: string, status: string) => {
+
+  const user = await authCheck() as UserType;
+
+  if (!user || !canUpdateCategory(user)) {
+    redirect("/");
+  }
+
+  try {
+    // Your logic to change category status goes here
+    const existsCategory = await db.category.findUnique({
+      where: { id }
+    })
+
+    if (!existsCategory) {
+      return {
+        message: 'Category not found'
+      }
+    }
+
+
+    if (existsCategory.status === status) {
+      return {
+        message: `Category is already ${status}`
+      }
+    }
+
+    const updatedCategory =  await db.category.update({
+      where: { id },
+      data: { status }
+    })
+
+    revalidateCategoryCache(updatedCategory.id);
+
+    return {
+      success: true,
+      message: `Category status changed to ${status} successfully`,
+      data: updatedCategory
+    }
+
+  } catch (error) {
+      console.error('Error changing category status:', error);
+      return {
+          message: 'Error changing category status'
+      }
+  }
+}
+
+
+export const removeCategory = async (id: string) => {
+  return await changeCategoryStatus(id, "Inactive");
+};
+
+export const restoreCategory = async (id: string) => {
+  return await changeCategoryStatus(id, "Active");
+};

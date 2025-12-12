@@ -15,8 +15,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CategoryType } from "@/types/category";
 import { MoreVertical, Pencil, RefreshCcw, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
 import EditCategoryModal from "./edit-category-modal";
+import { useEffect, useState } from "react";
+import DeleteCategoryModal from "./delete-category-modal";
+import RestoreCategoryModal from "./restore-category-modal";
 
 interface CategoryListProps {
   categories: CategoryType[];
@@ -24,19 +26,20 @@ interface CategoryListProps {
 
 const CategoryList = ({ categories }: CategoryListProps) => {
   // Modal State
-  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
-
-  const handleEditClick = (category: CategoryType) => {
-    setSelectedCategory(category);
-    setIsEditModalOpen(true);
-  }
-
+  const [isEditModal, setIsEditModal] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
+  const [isRestoreModal, setIsRestoreModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
+    null,
+  );
 
   const [activeTab, setActiveTab] = useState("all");
+  const [filteredCategories, setFilteredCategories] =
+    useState<CategoryType[]>(categories);
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredCategories = useMemo(() => {
+  useEffect(() => {
     let result = [...categories];
 
     if (activeTab === "active") {
@@ -51,14 +54,24 @@ const CategoryList = ({ categories }: CategoryListProps) => {
       );
     }
 
-    return result;
+    setFilteredCategories(result);
   }, [categories, activeTab, searchTerm]);
 
+  const handleEditClick = (category: CategoryType) => {
+    setSelectedCategory(category);
+    setIsEditModal(true);
+  };
 
+  const handleDeleteClick = (category: CategoryType) => {
+    setSelectedCategory(category);
+    setIsDeleteModal(true);
+  };
 
- 
+  const handleRestoreClick = (category: CategoryType) => {
+    setSelectedCategory(category);
+    setIsRestoreModal(true);
+  };
 
- 
   const handleTabActive = (value: string) => {
     setActiveTab(value);
   };
@@ -148,7 +161,7 @@ const CategoryList = ({ categories }: CategoryListProps) => {
                           variant="ghost"
                           size="icon"
                           className="size-7"
-
+                          onClick={() => handleDeleteClick(category)}
                         >
                           <Trash2 size={15} />
                         </Button>
@@ -157,7 +170,7 @@ const CategoryList = ({ categories }: CategoryListProps) => {
                           variant="ghost"
                           size="icon"
                           className="size-7"
-
+                          onClick={() => handleRestoreClick(category)}
                         >
                           <RefreshCcw size={15} />
                         </Button>
@@ -189,14 +202,14 @@ const CategoryList = ({ categories }: CategoryListProps) => {
 
                           {category.status === "Active" ? (
                             <DropdownMenuItem
-   
+                              onClick={() => handleDeleteClick(category)}
                             >
                               <Trash2 size={15} className="text-destructive" />
                               <span className="text-destructive">Delete</span>
                             </DropdownMenuItem>
                           ) : (
                             <DropdownMenuItem
-    
+                              onClick={() => handleRestoreClick(category)}
                             >
                               <Trash2 size={15} className="text-green-600" />
                               <span className="text-green-600">Restore</span>
@@ -217,13 +230,23 @@ const CategoryList = ({ categories }: CategoryListProps) => {
         </CardContent>
       </Card>
 
-
       <EditCategoryModal
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
+        open={isEditModal}
+        onOpenChange={setIsEditModal}
         category={selectedCategory}
       />
 
+      <DeleteCategoryModal
+        open={isDeleteModal}
+        onOpenChange={setIsDeleteModal}
+        category={selectedCategory}
+      />
+
+      <RestoreCategoryModal
+        open={isRestoreModal}
+        onOpenChange={setIsRestoreModal}
+        category={selectedCategory}
+      />
     </>
   );
 };

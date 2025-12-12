@@ -9,7 +9,7 @@ const CategoriesAdminPage = async () => {
 
   const activeCount = categories.filter(cat => cat.status === 'active').length;
   const inactiveCount = categories.filter(cat => cat.status === 'inactive').length;
-  const totalCount = categories.length; 
+  const totalCount = categories.length;
 
   return (
     <div className='p-4 sm:p-6 space-y-6'>
@@ -26,7 +26,7 @@ const CategoriesAdminPage = async () => {
           variant='outline'
           className='px-2 sm:px-3 py-1 text-xs sm:text-sm'
         >
-          <span className='font-semibold text-green-600'> { activeCount ? activeCount : 0}</span>
+          <span className='font-semibold text-green-600'> {activeCount ? activeCount : 0}</span>
           Active
         </Badge>
 
@@ -55,11 +55,12 @@ const CategoriesAdminPage = async () => {
         {/* <div>
           TEST
         </div> */}
+        <div className='lg:col-span-2'>
+          <CategoryList categories={categories} />
+        </div>
       </div>
 
-      <div className=''>
-        <CategoryList categories={categories} />
-      </div>
+
     </div>
   )
 }
