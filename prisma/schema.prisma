@@ -28,4 +28,22 @@ model Category {
   status    String   @default("Active")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  title        String
+  description String?
+  cost        Float @default(0)
+  basePrice   Float
+  price       Float
+  sole        Int @default(0)
+  stock       Int @default(0)
+  status      String    @default("Active")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
 }
