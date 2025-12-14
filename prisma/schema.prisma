@@ -19,31 +19,106 @@ model User {
   tel       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  cart   Cart[]
+  orders Order[]
 }
 
-
 model Category {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String
-  status    String   @default("Active")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    String    @default("Active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   products  Product[]
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  title        String
-  description String?
-  cost        Float @default(0)
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  cost        Float    @default(0)
   basePrice   Float
   price       Float
-  sole        Int @default(0)
-  stock       Int @default(0)
-  status      String    @default("Active")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  sold        Int      @default(0)
+  stock       Int
+  status      String   @default("Active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  categoryId  String
-  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId String
+  category   Category       @relation(fields: [categoryId], references: [id])
+  images     ProductImage[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  url       String
+  fileId    String
+  isMain    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  cartTotal Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderedById String
+  orderedBy   User       @relation(fields: [orderedById], references: [id])
+  products    CartItem[]
+}
+
+model CartItem {
+  id    String @id @default(uuid())
+  count Int    @default(1)
+  price Float
+
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id             String    @id @default(uuid())
+  orderNumber    String
+  totalAmount    Float
+  status         String    @default("Pending")
+  paymentImage   String?
+  paymentAt      DateTime?
+  address        String?
+  phone          String?
+  note           String?
+  shippingFee    Float     @default(0)
+  trackingNumber String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  customerId String
+  customer   User        @relation(fields: [customerId], references: [id])
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id           String   @id @default(uuid())
+  quantity     Int
+  price        Float
+  totalPirce   Float
+  productTitle String
+  productImage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 }

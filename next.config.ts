@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: {
     useCache: true,
-  }
+  },
+  reactStrictMode: false
 };
 
 export default nextConfig;

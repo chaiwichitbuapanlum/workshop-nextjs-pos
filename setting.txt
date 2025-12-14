@@ -39,3 +39,5 @@ npm i --save-dev @types/bcrypt
 
 6 
     npm i jose
+
+    npm i sharp

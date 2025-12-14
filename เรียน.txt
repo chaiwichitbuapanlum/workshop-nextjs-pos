@@ -29,6 +29,11 @@ Day21_Workshop_11
 
 Day22_Workshop_12
 
+Day23_Workshop_13
+    page new product
+
+Day24_Workshop_14
+    upload file >>>> ดูเพิ่มเติม
 
 การเชื่อมต่อ db
     สร้าง fucntion ใน db
