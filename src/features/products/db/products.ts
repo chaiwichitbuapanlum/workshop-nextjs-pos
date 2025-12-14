@@ -167,13 +167,19 @@ export const getFeatureProducts = async () => {
 };
 
 export const createProduct = async (input: CreateProductInput) => {
+  console.log("=== Create Product Function ===");
+  console.log("Input:", input);
+
   const user = await authCheck() as UserType
   if (!user || !canCreateProduct(user)) {
+    console.log("Auth failed or no permission");
     redirect("/");
   }
 
   try {
     const { success, data, error } = productSchema.safeParse(input);
+
+    console.log("Validation result:", { success, data, error });
 
     if (!success) {
       return {
@@ -190,6 +196,8 @@ export const createProduct = async (input: CreateProductInput) => {
       },
     });
 
+    console.log("Category found:", category);
+
     if (!category) {
       return {
         message: "Selected category not found or inactive",
@@ -198,6 +206,16 @@ export const createProduct = async (input: CreateProductInput) => {
 
     // Create new product
     const newProduct = await db.$transaction(async (prisma) => {
+      console.log("Creating product with data:", {
+        title: data.title,
+        description: data.description,
+        cost: data.cost,
+        basePrice: data.basePrice,
+        price: data.price,
+        stock: data.stock,
+        categoryId: data.categoryId,
+      });
+
       const product = await prisma.product.create({
         data: {
           title: data.title,
@@ -210,9 +228,17 @@ export const createProduct = async (input: CreateProductInput) => {
         },
       });
 
+      console.log("Product created:", product);
+
       if (input.images && input.images.length > 0) {
+        console.log("Creating images:", input.images.length);
         await Promise.all(
           input.images.map((image, index) => {
+            console.log(`Creating image ${index}:`, {
+              url: image.url,
+              fileId: image.fileId,
+              isMain: input.mainImageIndex === index,
+            });
             return prisma.productImage.create({
               data: {
                 url: image.url,
@@ -228,7 +254,11 @@ export const createProduct = async (input: CreateProductInput) => {
       return product;
     });
 
+    console.log("Transaction completed, new product:", newProduct);
     revalidateProductCache(newProduct.id);
+    
+    console.log("=== Create Product Success ===");
+    return { success: true };
   } catch (error) {
     console.error("Error creating product:", error);
     return {
@@ -375,6 +405,8 @@ export const updateProduct = async (
     });
 
     revalidateProductCache(updatedProduct.id);
+    
+    return { success: true };
   } catch (error) {
     console.error("Error updating product:", error);
     return {
@@ -415,6 +447,8 @@ export const changeProductStatus = async (
     });
 
     revalidateProductCache(updatedProduct.id);
+    
+    return { success: true };
   } catch (error) {
     console.error("Error changing product status:", error);
     return {

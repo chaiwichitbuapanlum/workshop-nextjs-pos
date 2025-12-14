@@ -26,6 +26,9 @@ export const productAction = async (
     deletedImageIds: formData.get("deleted-image-ids") as string,
   };
 
+  console.log("=== Product Action Debug ===");
+  console.log("Raw Data:", rawData);
+
   const processedData = {
     ...rawData,
     cost: rawData.cost ? parseFloat(rawData.cost) : undefined,
@@ -40,10 +43,14 @@ export const productAction = async (
       : [],
   };
 
+  console.log("Processed Data:", processedData);
+
   const uploadedImages = [];
 
   for (const imageFile of processedData.images) {
+    console.log("Uploading image:", imageFile.name, imageFile.size);
     const uploadResult = await uploadToImageKit(imageFile, "product");
+    console.log("Upload result:", uploadResult);
     if (uploadResult && !uploadResult.message) {
       uploadedImages.push({
         url: uploadResult.url || "",
@@ -51,6 +58,8 @@ export const productAction = async (
       });
     }
   }
+
+  console.log("Uploaded Images:", uploadedImages);
 
   const result = processedData.id
     ? await updateProduct({
@@ -62,18 +71,25 @@ export const productAction = async (
         images: uploadedImages,
       });
 
-  return result && result.message
-    ? {
-        success: false,
-        message: result.message,
-        errors: result.error,
-      }
-    : {
-        success: true,
-        message: processedData.id
-          ? "Product updated successfully"
-          : "Product created successfully",
-      };
+  console.log("Result from DB:", result);
+  console.log("=== End Debug ===");
+
+  // ถ้ามี result และมี message แสดงว่าเกิด error
+  if (result && result.message) {
+    return {
+      success: false,
+      message: result.message,
+      errors: result.error,
+    };
+  }
+
+  // ถ้าไม่มี error แสดงว่าสำเร็จ
+  return {
+    success: true,
+    message: processedData.id
+      ? "Product updated successfully"
+      : "Product created successfully",
+  };
 };
 
 export const deleteProductAction = async (

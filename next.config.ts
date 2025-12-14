@@ -6,7 +6,17 @@ const nextConfig: NextConfig = {
   experimental: {
     useCache: true,
   },
-  reactStrictMode: false
+  reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ik.imagekit.io',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
