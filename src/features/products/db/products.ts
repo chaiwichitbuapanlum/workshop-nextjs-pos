@@ -14,6 +14,7 @@ import { redirect } from "next/navigation";
 import { deleteFromImageKit } from "@/lib/imageKit";
 import { canCreateProduct, canUpdateProduct } from "../permissions/products";
 import { UserType } from "@/types/user-type";
+import { ProductType } from "@/types/product";
 
 type ProductStatus = "Active" | "Inactive";
 
@@ -65,6 +66,8 @@ export const getProducts = async (page: number = 1, limit: number = 2) => {
 
         return {
           ...product,
+          createdAt: product.createdAt.toISOString(),
+          updatedAt: product.updatedAt.toISOString(),
           lowStock: 5,
           sku: product.id.substring(0, 8).toUpperCase(),
           mainImage,
@@ -97,7 +100,7 @@ export const getProductById = async (id: string) => {
         },
         images: true,
       },
-    });
+    }) as ProductType
 
     if (!product) {
       return null;

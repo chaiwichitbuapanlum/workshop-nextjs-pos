@@ -35,6 +35,11 @@ Day23_Workshop_13
 Day24_Workshop_14
     upload file >>>> ดูเพิ่มเติม
 
+Day25_Workshop_15
+
+
+Day26_Workshop_16
+
 การเชื่อมต่อ db
     สร้าง fucntion ใน db
         กำหนด schema
