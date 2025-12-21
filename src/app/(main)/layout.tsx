@@ -8,6 +8,7 @@ interface MainLayoutProps {
 
 const MainLayout = async ({ children }: MainLayoutProps) => {
     const user = await authCheck() as UserType | null
+    // console.log(user)
 
 
     return (
